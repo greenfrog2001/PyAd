@@ -9,24 +9,12 @@ import json
 import pyglet
 from googletrans import Translator
 import vlc
+import pafy
 import calendar
 import datetime
+from youtube_search import YoutubeSearch
 # import asyncio
 # import PyQt5
-
-# input_1 = input('Q for wolframalpha: ')
-# app_id = 'WTRAQ5-VR7PE9EHYH'
-#
-# client = wolframalpha.Client(app_id)
-#
-# res = client.query(input_1)
-# answer = next(res.results).text
-#
-# print(answer)
-#
-# while True:
-#     input_2 = input('Q for wikipedia: ')
-#     print(wikipedia.summary(input_2))
 
 class MyFrame(wx.Frame):
     def __init__(self):
@@ -69,8 +57,9 @@ class MyFrame(wx.Frame):
         input_ = self.txt.GetValue()
         input_ = input_.lower()
         raw_input_ = str(self.txt.GetValue())
-#         str(raw_input_).split()[0] = first_kw
-        if str(raw_input_).split()[0] == 'weather':
+        
+        first_kw = str(raw_input_).split()[0]
+        if first_kw == 'weather':
         # if raw_input_ == 'weather':
             api_weather_key = "7b0d74a745885b0d104caf540568ed8c"
             base_url = "http://api.openweathermap.org/data/2.5/weather?"
@@ -125,16 +114,21 @@ class MyFrame(wx.Frame):
                 os.system('gtts_obj.mp3')
             return None
 
-        elif str(raw_input_).split()[0] == 'youtube':
-            playurl = str(raw_input_).split()[1]
-            Instance = vlc.Instance()
-            player = Instance.media_player_new()
-            Media = Instance.media_new(playurl)
-            Media.get_mrl()
-            player.set_media(Media)
-            player.play()            
+        elif first_kw == 'youtube':
+            url = str(raw_input_).split()[1]
+            results = YoutubeSearch(str(raw_input_).split()[1], max_results=10).to_dict()
+            url_code = results[0]['id']
+            url = "https://www.youtube.com/watch?v=" + url_code
+            # creating pafy object of the video 
+            video = pafy.new(url) 
+            # getting best stream 
+            best = video.getbest() 
+            # creating vlc media player object 
+            media = vlc.MediaPlayer(best.url) 
+            # start playing video 
+            media.play() 
 
-        elif str(raw_input_).split()[0] == 'translate':
+        elif first_kw == 'translate':
             translator = Translator()
             # translations = translator.translate(str(raw_input_))
             print("Into translation!")
@@ -147,7 +141,7 @@ class MyFrame(wx.Frame):
 
             return None
         
-        elif str(raw_input_).split()[0] == 'date':
+        elif first_kw == 'date':
             print('Today is ' + '.')
 
         else:
