@@ -18,6 +18,9 @@ Pyad is a kind of intelligent assistant.
 4. Play video from Youtube
    How to: type in "youtube <search keywords>"
    
+5. Translate
+   How to: type in "translate <text> <destination language code>" to translate.
+   Ex: translate Hello vi
 5. Return answer with both texts and sounds.
 
 ## FAQ
