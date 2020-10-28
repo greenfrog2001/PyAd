@@ -19,7 +19,7 @@ from youtube_search import YoutubeSearch
 class MyFrame(wx.Frame):
     def __init__(self):
         wx.Frame.__init__(self, None,
-            pos=wx.DefaultPosition, size=wx.Size(450, 220),
+            pos=wx.DefaultPosition, size=wx.Size(450, 280),
             style=wx.MINIMIZE_BOX | wx.SYSTEM_MENU | wx.CAPTION |
             wx.CLOSE_BOX | wx.CLIP_CHILDREN, title='PyAd')
         panel = wx.Panel(self)
@@ -27,7 +27,7 @@ class MyFrame(wx.Frame):
 #         Adjust sizer
         my_sizer = wx.BoxSizer(wx.VERTICAL)
 
-        lbl = wx.StaticText(panel, label='Hi, Im PyAd. What can I help you with? \n Type "weather <city name>" to get info about weather.')
+        lbl = wx.StaticText(panel, label='Hi, Im PyAd. Ask me something? \nType "weather <city name>" to get info about weather. \nType "youtube <search keywords>" to play Youtube videos. \nType "translate <text> <destination language code>" to translate. \n \t Ex: translate Hello vi \nType a math expression to get a solution.')
         my_sizer.Add(lbl, 0, wx.ALL, 5)
         
 #         Add text block
@@ -132,8 +132,16 @@ class MyFrame(wx.Frame):
             translator = Translator()
             # translations = translator.translate(str(raw_input_))
             print("Into translation!")
-            answer = translator.translate(str(raw_input_).split()[1:-1], dest=str(raw_input_).split()[-1])
-            print(answer)
+#             answer = translator.translate(str(raw_input_).split()[1:-1], dest=str(raw_input_).split()[-1])
+#             print(answer)
+            
+            translations = translator.translate(str(raw_input_).split()[1:-1], dest=str(raw_input_).split()[-1])
+            origin = ''
+            answer = ''
+            for translation in translations:
+                origin += translation.origin + ' '
+                answer += translation.text + ' '
+            print(origin, ' -> ', answer)
 
             gtts_obj = gTTS(answer, lang='en')
             gtts_obj.save('gtts_obj.mp3')
@@ -216,9 +224,7 @@ if __name__ == '__main__':
     app.MainLoop()
 
 # Add google maps feature
-# Add youtube player
 # Add dropdown menu
-# Add google translate
 # Add notes
 # Add visual
 # Add cre
