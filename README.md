@@ -15,7 +15,10 @@ Pyad is a kind of intelligent assistant.
 3. Get information about weather
    How to: type in "weather <city>"
   
-4. Return answer with both texts and sounds.
+4. Play video from Youtube
+   How to: type in "youtube <search keywords>"
+   
+5. Return answer with both texts and sounds.
 
 ## FAQ
 
