@@ -13,8 +13,6 @@ import pafy
 import calendar
 import datetime
 from youtube_search import YoutubeSearch
-# import asyncio
-# import PyQt5
 
 class MyFrame(wx.Frame):
     def __init__(self):
@@ -100,7 +98,6 @@ class MyFrame(wx.Frame):
                 # the 0th index of z
                 weather_description = z[0]["description"]
 
-                # final answer for output
                 answer = str(city_name) + "\n Temperature (in Celcius) = " + str(current_temperature) + "\n atmospheric pressure (in hPa unit) = " + str(current_pressure) + "\n humidity (in percentage) = " + str(current_humidiy) + "\n description = " + str(weather_description)
                 print(answer)
                 gtts_obj = gTTS(answer, lang='en')
@@ -129,13 +126,9 @@ class MyFrame(wx.Frame):
             media.play() 
 
         elif first_kw == 'translate':
+            translate_lang = str(raw_input_).split()[-1]
             translator = Translator()
-            # translations = translator.translate(str(raw_input_))
-            print("Into translation!")
-#             answer = translator.translate(str(raw_input_).split()[1:-1], dest=str(raw_input_).split()[-1])
-#             print(answer)
-            
-            translations = translator.translate(str(raw_input_).split()[1:-1], dest=str(raw_input_).split()[-1])
+            translations = translator.translate(str(raw_input_).split()[1:-1], dest=translate_lang)
             origin = ''
             answer = ''
             for translation in translations:
@@ -143,7 +136,7 @@ class MyFrame(wx.Frame):
                 answer += translation.text + ' '
             print(origin, ' -> ', answer)
 
-            gtts_obj = gTTS(answer, lang='en')
+            gtts_obj = gTTS(answer, lang=translate_lang)
             gtts_obj.save('gtts_obj.mp3')
             os.system('gtts_obj.mp3')
 
