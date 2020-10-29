@@ -17,7 +17,7 @@ from youtube_search import YoutubeSearch
 class MyFrame(wx.Frame):
     def __init__(self):
         wx.Frame.__init__(self, None,
-            pos=wx.DefaultPosition, size=wx.Size(450, 350),
+            pos=wx.DefaultPosition, size=wx.Size(450, 400),
             style=wx.MINIMIZE_BOX | wx.SYSTEM_MENU | wx.CAPTION |
             wx.CLOSE_BOX | wx.CLIP_CHILDREN, title='PyAd')
         panel = wx.Panel(self)
@@ -35,21 +35,23 @@ class MyFrame(wx.Frame):
         my_sizer.Add(self.txt, 0, wx.ALL, 5)
         
 #         Add voice button
-        pic = wx.Bitmap("speaker_icon.jpg", wx.BITMAP_TYPE_ANY)
-#         voice_button = wx.BitmapButton(panel, -1, pic, pos=(10,10))
-        
+        speaker_pic = wx.Bitmap("speaker_icon.jpg", wx.BITMAP_TYPE_ANY)
         voice_button = wx.Button(panel, label ="Voice")
-        voice_button.SetBitmap(pic)
+        voice_button.SetBitmap(speaker_pic)
         voice_button.Bind(wx.EVT_BUTTON, self.OnEnterVoice)
-        my_sizer.Add(voice_button, 0, wx.ALL | wx.RIGHT, 5)
+        my_sizer.Add(voice_button, 0, wx.ALL | wx.ALIGN_LEFT, 5)
         
 #         Add KKK button
+        KKK_pic = wx.Bitmap("KKK_icon.png", wx.BITMAP_TYPE_ANY)
         KKK_button = wx.Button(panel, label='Play KKK!')
+        KKK_button.SetBitmap(KKK_pic)
         KKK_button.Bind(wx.EVT_BUTTON, self.On_Press_KKK)
         my_sizer.Add(KKK_button, 0, wx.ALL | wx.CENTER, 5)
         
 #         Add Calendar button
+        calendar_pic = wx.Bitmap("calendar_icon.png", wx.BITMAP_TYPE_ANY)
         calendar_button = wx.Button(panel, label='Calendar')
+        calendar_button.SetBitmap(calendar_pic)
         calendar_button.Bind(wx.EVT_BUTTON, self.get_calendar)
         my_sizer.Add(calendar_button, 0, wx.ALL | wx.CENTER, 5)
 
@@ -109,15 +111,10 @@ class MyFrame(wx.Frame):
 
                 answer = str(city_name) + "\n Temperature (in Celcius) = " + str(current_temperature) + "\n atmospheric pressure (in hPa unit) = " + str(current_pressure) + "\n humidity (in percentage) = " + str(current_humidiy) + "\n description = " + str(weather_description)
                 print(answer)
-#                 gtts_obj = gTTS(answer, lang='en')
-#                 gtts_obj.save('gtts_obj.mp3')
-#                 os.system('gtts_obj.mp3')
 
             else:
                 print(" City Not Found ")
-#                 gtts_obj = gTTS("City Not Found", lang='en')
-#                 gtts_obj.save('gtts_obj.mp3')
-#                 os.system('gtts_obj.mp3')
+
             return None
 
         elif first_kw == 'youtube':
@@ -145,10 +142,6 @@ class MyFrame(wx.Frame):
                 answer += translation.text + ' '
             print(origin, ' -> ', answer)
 
-#             gtts_obj = gTTS(answer, lang=translate_lang)
-#             gtts_obj.save('gtts_obj.mp3')
-#             os.system('gtts_obj.mp3')
-
             return None
         
         elif first_kw == 'date':
@@ -165,19 +158,9 @@ class MyFrame(wx.Frame):
 
                 print(answer)
 
-                # Play sound that reads the answer
-#                 gtts_obj = gTTS(answer, lang='en')
-#                 gtts_obj.save('gtts_obj.mp3')
-#                 os.system('gtts_obj.mp3')
-                # os.remove('gtts_obj.mp3')
             except:
                 # wikipedia
                 print(wikipedia.summary(input_))
-
-                # Play sound that reads the answer
-#                 gtts_obj = gTTS(wikipedia.summary(input_, sentences=3), lang='en')
-#                 gtts_obj.save('gtts_obj.mp3')
-#                 os.system('gtts_obj.mp3')
     
     def OnEnterVoice(self, event):
         input_ = self.txt.GetValue()
@@ -261,10 +244,8 @@ class MyFrame(wx.Frame):
                 # wolframalpha
                 app_id = 'WTRAQ5-VR7PE9EHYH'
                 client = wolframalpha.Client(app_id)
-
                 res = client.query(input_)
                 answer = next(res.results).text
-
                 print(answer)
 
                 # Play sound that reads the answer
@@ -330,5 +311,7 @@ if __name__ == '__main__':
 # Add google maps feature
 # Add dropdown menu
 # Add visual
+# Add meme generator
 # Add cre
 # Add help
+# Customize output windows
