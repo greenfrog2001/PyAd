@@ -17,7 +17,7 @@ from youtube_search import YoutubeSearch
 class MyFrame(wx.Frame):
     def __init__(self):
         wx.Frame.__init__(self, None,
-            pos=wx.DefaultPosition, size=wx.Size(450, 280),
+            pos=wx.DefaultPosition, size=wx.Size(450, 350),
             style=wx.MINIMIZE_BOX | wx.SYSTEM_MENU | wx.CAPTION |
             wx.CLOSE_BOX | wx.CLIP_CHILDREN, title='PyAd')
         panel = wx.Panel(self)
@@ -33,6 +33,15 @@ class MyFrame(wx.Frame):
         self.txt.SetFocus()
         self.txt.Bind(wx.EVT_TEXT_ENTER, self.OnEnter)
         my_sizer.Add(self.txt, 0, wx.ALL, 5)
+        
+#         Add voice button
+        pic = wx.Bitmap("speaker_icon.jpg", wx.BITMAP_TYPE_ANY)
+#         voice_button = wx.BitmapButton(panel, -1, pic, pos=(10,10))
+        
+        voice_button = wx.Button(panel, label ="Voice")
+        voice_button.SetBitmap(pic)
+        voice_button.Bind(wx.EVT_BUTTON, self.OnEnterVoice)
+        my_sizer.Add(voice_button, 0, wx.ALL | wx.RIGHT, 5)
         
 #         Add KKK button
         KKK_button = wx.Button(panel, label='Play KKK!')
@@ -100,6 +109,111 @@ class MyFrame(wx.Frame):
 
                 answer = str(city_name) + "\n Temperature (in Celcius) = " + str(current_temperature) + "\n atmospheric pressure (in hPa unit) = " + str(current_pressure) + "\n humidity (in percentage) = " + str(current_humidiy) + "\n description = " + str(weather_description)
                 print(answer)
+#                 gtts_obj = gTTS(answer, lang='en')
+#                 gtts_obj.save('gtts_obj.mp3')
+#                 os.system('gtts_obj.mp3')
+
+            else:
+                print(" City Not Found ")
+#                 gtts_obj = gTTS("City Not Found", lang='en')
+#                 gtts_obj.save('gtts_obj.mp3')
+#                 os.system('gtts_obj.mp3')
+            return None
+
+        elif first_kw == 'youtube':
+            url = str(raw_input_).split()[1]
+            results = YoutubeSearch(str(raw_input_).split()[1], max_results=10).to_dict()
+            url_code = results[0]['id']
+            url = "https://www.youtube.com/watch?v=" + url_code
+            # creating pafy object of the video 
+            video = pafy.new(url) 
+            # getting best stream 
+            best = video.getbest() 
+            # creating vlc media player object 
+            media = vlc.MediaPlayer(best.url) 
+            # start playing video 
+            media.play() 
+
+        elif first_kw == 'translate':
+            translate_lang = str(raw_input_).split()[-1]
+            translator = Translator()
+            translations = translator.translate(str(raw_input_).split()[1:-1], dest=translate_lang)
+            origin = ''
+            answer = ''
+            for translation in translations:
+                origin += translation.origin + ' '
+                answer += translation.text + ' '
+            print(origin, ' -> ', answer)
+
+#             gtts_obj = gTTS(answer, lang=translate_lang)
+#             gtts_obj.save('gtts_obj.mp3')
+#             os.system('gtts_obj.mp3')
+
+            return None
+        
+        elif first_kw == 'date':
+            print('Today is ' + '.')
+
+        else:
+            try:
+                # wolframalpha
+                app_id = 'WTRAQ5-VR7PE9EHYH'
+                client = wolframalpha.Client(app_id)
+
+                res = client.query(input_)
+                answer = next(res.results).text
+
+                print(answer)
+
+                # Play sound that reads the answer
+#                 gtts_obj = gTTS(answer, lang='en')
+#                 gtts_obj.save('gtts_obj.mp3')
+#                 os.system('gtts_obj.mp3')
+                # os.remove('gtts_obj.mp3')
+            except:
+                # wikipedia
+                print(wikipedia.summary(input_))
+
+                # Play sound that reads the answer
+#                 gtts_obj = gTTS(wikipedia.summary(input_, sentences=3), lang='en')
+#                 gtts_obj.save('gtts_obj.mp3')
+#                 os.system('gtts_obj.mp3')
+    
+    def OnEnterVoice(self, event):
+        input_ = self.txt.GetValue()
+        input_ = input_.lower()
+        raw_input_ = str(self.txt.GetValue())
+        
+        first_kw = str(raw_input_).split()[0]
+        if first_kw == 'weather':
+            api_weather_key = "7b0d74a745885b0d104caf540568ed8c"
+            base_url = "http://api.openweathermap.org/data/2.5/weather?"
+
+            city_name_parts = str(raw_input_).split()[1:]
+            city_name = ""
+            for part in city_name_parts:
+                city_name += ""
+                city_name += part
+            complete_url = base_url + "appid=" + api_weather_key + "&q=" + city_name
+
+            response = requests.get(complete_url)
+
+            x = response.json()
+
+            if x["cod"] != "404":
+
+                y = x["main"]
+
+                current_kevin_temperature = y["temp"]
+                current_temperature = y['temp'] - 273
+                current_temperature = round(current_temperature, 1)
+                current_pressure = y["pressure"]
+                current_humidiy = y["humidity"]
+                z = x["weather"]
+                weather_description = z[0]["description"]
+
+                answer = str(city_name) + "\n Temperature (in Celcius) = " + str(current_temperature) + "\n atmospheric pressure (in hPa unit) = " + str(current_pressure) + "\n humidity (in percentage) = " + str(current_humidiy) + "\n description = " + str(weather_description)
+                print(answer)
                 gtts_obj = gTTS(answer, lang='en')
                 gtts_obj.save('gtts_obj.mp3')
                 os.system('gtts_obj.mp3')
@@ -141,9 +255,6 @@ class MyFrame(wx.Frame):
             os.system('gtts_obj.mp3')
 
             return None
-        
-        elif first_kw == 'date':
-            print('Today is ' + '.')
 
         else:
             try:
@@ -169,7 +280,7 @@ class MyFrame(wx.Frame):
                 gtts_obj = gTTS(wikipedia.summary(input_, sentences=3), lang='en')
                 gtts_obj.save('gtts_obj.mp3')
                 os.system('gtts_obj.mp3')
-
+        
     def On_Press_KKK(self, event):
         deck = [2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K', 'A']
         player_hand = []
@@ -218,7 +329,6 @@ if __name__ == '__main__':
 
 # Add google maps feature
 # Add dropdown menu
-# Add notes
 # Add visual
 # Add cre
 # Add help
