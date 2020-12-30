@@ -6,13 +6,24 @@ import os
 import random
 import requests
 import json
-import pyglet
+# import pyglet
 from googletrans import Translator
 import vlc
 import pafy
 import calendar
 import datetime
 from youtube_search import YoutubeSearch
+import sys
+
+class SecondFrame(wx.Frame):
+    def __init__(self):
+        wx.Frame.__init__(self, None, title='Help')
+        panel = wx.Panel(self)
+        lbl_string = 'Type "weather <city name>" to get info about weather.\n'
+        lbl_string += 'Type "youtube <search keywords>" to play Youtube videos.\n'
+        lbl_string += 'Type "translate <text> <destination language code>" to translate.\n\tEx: translate Hello vi\n'
+        lbl_string += 'Type a math expression to get a solution.'
+        lbl = wx.StaticText(panel, label=lbl_string)
 
 class MyFrame(wx.Frame):
     def __init__(self):
@@ -21,33 +32,52 @@ class MyFrame(wx.Frame):
             style=wx.MINIMIZE_BOX | wx.SYSTEM_MENU | wx.CAPTION |
             wx.CLOSE_BOX | wx.CLIP_CHILDREN, title='PyAd')
         panel = wx.Panel(self)
-        
+#         sys.stdout = self;
 #         Adjust sizer
         my_sizer = wx.BoxSizer(wx.VERTICAL)
 
-        lbl = wx.StaticText(panel, label='Hi, Im PyAd. Ask me something? \nType "weather <city name>" to get info about weather. \nType "youtube <search keywords>" to play Youtube videos. \nType "translate <text> <destination language code>" to translate. \n \t Ex: translate Hello vi \nType a math expression to get a solution.')
+        lbl_string = 'Hi, Im PyAd. Ask me something?\n'
+        lbl_string += 'Type "weather <city name>" to get info about weather.\n'
+        lbl_string += 'Type "youtube <search keywords>" to play Youtube videos.\n'
+        lbl_string += 'Type "translate <text> <destination language code>" to translate.\n\tEx: translate Hello vi\n'
+        lbl_string += 'Type a math expression to get a solution.'
+        lbl = wx.StaticText(panel, label=lbl_string)
         my_sizer.Add(lbl, 0, wx.ALL, 5)
-        
+
+        # Menu bar
+        # menubar = wx.MenuBar()
+        # fileMenu = wx.Menu()
+        # fileItem = fileMenu.Append(wx.ID_EXIT, 'Quit', 'Quit application')
+        # menubar.Append(fileMenu, '&File')
+        # self.SetMenuBar(menubar)
+
+        # self.Bind(wx.EVT_MENU, self.OnQuit, fileItem)
+
+        # Add help button
+        help_button = wx.Button(panel, label = 'Help')
+        help_button.Bind(wx.EVT_BUTTON, self.HelpButton)
+        my_sizer.Add(help_button, 0, wx.ALL | wx.ALIGN_RIGHT, 5)
+
 #         Add text block
         self.txt = wx.TextCtrl(panel, style=wx.TE_PROCESS_ENTER, size=(400, 50))
         self.txt.SetFocus()
         self.txt.Bind(wx.EVT_TEXT_ENTER, self.OnEnter)
         my_sizer.Add(self.txt, 0, wx.ALL, 5)
-        
+
 #         Add voice button
         speaker_pic = wx.Bitmap("speaker_icon.jpg", wx.BITMAP_TYPE_ANY)
         voice_button = wx.Button(panel, label ="Voice")
         voice_button.SetBitmap(speaker_pic)
         voice_button.Bind(wx.EVT_BUTTON, self.OnEnterVoice)
         my_sizer.Add(voice_button, 0, wx.ALL | wx.ALIGN_LEFT, 5)
-        
+
 #         Add KKK button
         KKK_pic = wx.Bitmap("KKK_icon.png", wx.BITMAP_TYPE_ANY)
         KKK_button = wx.Button(panel, label='Play KKK!')
         KKK_button.SetBitmap(KKK_pic)
         KKK_button.Bind(wx.EVT_BUTTON, self.On_Press_KKK)
         my_sizer.Add(KKK_button, 0, wx.ALL | wx.CENTER, 5)
-        
+
 #         Add Calendar button
         calendar_pic = wx.Bitmap("calendar_icon.png", wx.BITMAP_TYPE_ANY)
         calendar_button = wx.Button(panel, label='Calendar')
@@ -56,17 +86,25 @@ class MyFrame(wx.Frame):
         my_sizer.Add(calendar_button, 0, wx.ALL | wx.CENTER, 5)
 
 #         Set background color
-        self.SetBackgroundColour('Gold')
-    
+        self.SetBackgroundColour('gray')
+        # self.SetBackgroundColour('CADET BLUE')
         panel.SetSizer(my_sizer)
+
+#         log = wx.TextCtrl(panel, wx.ID_ANY, size=(300,100), style=style);
+#         sys.stdout = log;
+
         self.Show()
-        
+
+    def HelpButton (self, event):
+        frame = SecondFrame();
+        frame.Show()
+
     #   Get user's input and return info
     def OnEnter(self, event):
         input_ = self.txt.GetValue()
         input_ = input_.lower()
         raw_input_ = str(self.txt.GetValue())
-        
+
         first_kw = str(raw_input_).split()[0]
         if first_kw == 'weather':
         # if raw_input_ == 'weather':
@@ -79,7 +117,8 @@ class MyFrame(wx.Frame):
             for part in city_name_parts:
                 city_name += ""
                 city_name += part
-            complete_url = base_url + "appid=" + api_weather_key + "&q=" + city_name
+            complete_url = base_url + "appid=" + api_weather_key + "&q=" \
+            + city_name
 
             # get method of requests module
             # return response object
@@ -109,7 +148,7 @@ class MyFrame(wx.Frame):
                 # the 0th index of z
                 weather_description = z[0]["description"]
 
-                answer = str(city_name) + "\n Temperature (in Celcius) = " + str(current_temperature) + "\n atmospheric pressure (in hPa unit) = " + str(current_pressure) + "\n humidity (in percentage) = " + str(current_humidiy) + "\n description = " + str(weather_description)
+                answer = str(city_name) + "\nTemperature (in Celcius) = " + str(current_temperature) + "\nAtmospheric pressure (in hPa unit) = " + str(current_pressure) + "\nHumidity (in percentage) = " + str(current_humidiy) + "\nDescription = " + str(weather_description)
                 print(answer)
 
             else:
@@ -118,18 +157,20 @@ class MyFrame(wx.Frame):
             return None
 
         elif first_kw == 'youtube':
-            url = str(raw_input_).split()[1]
-            results = YoutubeSearch(str(raw_input_).split()[1], max_results=10).to_dict()
+            search_term = ""
+            for word in str(raw_input_).split():
+                search_term += word + " "
+            results = YoutubeSearch(search_term, max_results=10).to_dict()
             url_code = results[0]['id']
             url = "https://www.youtube.com/watch?v=" + url_code
-            # creating pafy object of the video 
-            video = pafy.new(url) 
-            # getting best stream 
-            best = video.getbest() 
-            # creating vlc media player object 
-            media = vlc.MediaPlayer(best.url) 
-            # start playing video 
-            media.play() 
+            # creating pafy object of the video
+            video = pafy.new(url)
+            # getting best stream
+            best = video.getbest()
+            # creating vlc media player object
+            media = vlc.MediaPlayer(best.url)
+            # start playing video
+            media.play()
 
         elif first_kw == 'translate':
             translate_lang = str(raw_input_).split()[-1]
@@ -143,9 +184,6 @@ class MyFrame(wx.Frame):
             print(origin, ' -> ', answer)
 
             return None
-        
-        elif first_kw == 'date':
-            print('Today is ' + '.')
 
         else:
             try:
@@ -155,18 +193,18 @@ class MyFrame(wx.Frame):
 
                 res = client.query(input_)
                 answer = next(res.results).text
-
+                print(type(res.results[0]))
                 print(answer)
 
             except:
                 # wikipedia
                 print(wikipedia.summary(input_))
-    
+
     def OnEnterVoice(self, event):
         input_ = self.txt.GetValue()
         input_ = input_.lower()
         raw_input_ = str(self.txt.GetValue())
-        
+
         first_kw = str(raw_input_).split()[0]
         if first_kw == 'weather':
             api_weather_key = "7b0d74a745885b0d104caf540568ed8c"
@@ -195,7 +233,7 @@ class MyFrame(wx.Frame):
                 z = x["weather"]
                 weather_description = z[0]["description"]
 
-                answer = str(city_name) + "\n Temperature (in Celcius) = " + str(current_temperature) + "\n atmospheric pressure (in hPa unit) = " + str(current_pressure) + "\n humidity (in percentage) = " + str(current_humidiy) + "\n description = " + str(weather_description)
+                answer = str(city_name) + "\nTemperature (in Celcius) = " + str(current_temperature) + "\nAtmospheric pressure (in hPa unit) = " + str(current_pressure) + "\nHumidity (in percentage) = " + str(current_humidiy) + "\nDescription = " + str(weather_description)
                 print(answer)
                 gtts_obj = gTTS(answer, lang='en')
                 gtts_obj.save('gtts_obj.mp3')
@@ -213,14 +251,14 @@ class MyFrame(wx.Frame):
             results = YoutubeSearch(str(raw_input_).split()[1], max_results=10).to_dict()
             url_code = results[0]['id']
             url = "https://www.youtube.com/watch?v=" + url_code
-            # creating pafy object of the video 
-            video = pafy.new(url) 
-            # getting best stream 
-            best = video.getbest() 
-            # creating vlc media player object 
-            media = vlc.MediaPlayer(best.url) 
-            # start playing video 
-            media.play() 
+            # creating pafy object of the video
+            video = pafy.new(url)
+            # getting best stream
+            best = video.getbest()
+            # creating vlc media player object
+            media = vlc.MediaPlayer(best.url)
+            # start playing video
+            media.play()
 
         elif first_kw == 'translate':
             translate_lang = str(raw_input_).split()[-1]
@@ -261,7 +299,7 @@ class MyFrame(wx.Frame):
                 gtts_obj = gTTS(wikipedia.summary(input_, sentences=3), lang='en')
                 gtts_obj.save('gtts_obj.mp3')
                 os.system('gtts_obj.mp3')
-        
+
     def On_Press_KKK(self, event):
         deck = [2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K', 'A']
         player_hand = []
@@ -295,7 +333,7 @@ class MyFrame(wx.Frame):
             print('Aha! You lose!')
         else:
             print('Aha! Draw!')
-    
+
 #     Get calendar
     def get_calendar(self, event):
         today_date = datetime.datetime.today()
