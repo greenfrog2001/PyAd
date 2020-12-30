@@ -2,15 +2,23 @@
 Pyad is a kind of intelligent assistant.
 
 ## Installation
-1. Install libraries\
-   + wolframalpha (Wolfram Alpha): pip install wolframalpha
-   + wikipedia (Wikipedia): pip install wikipedia
-   + wxPython (WxPython): pip install wxPython
-   + gTTS (Google Text-to-Speech): pip install gTTS
-   + googletrans (implements Google Translate API): pip install googletrans==3.1.0a0
-   + vlc: pip install python-vlc
-   + pafy: pip install pafy
-   + youtube-search (Youtube Seach): pip install youtube-search
+1. Install libraries
+   + wolframalpha (Wolfram Alpha): 
+   `pip install wolframalpha'
+   + wikipedia (Wikipedia): 
+   `pip install wikipedia`
+   + wxPython (WxPython): 
+   `pip install wxPython`
+   + gTTS (Google Text-to-Speech): 
+   `pip install gTTS`
+   + googletrans (implements Google Translate API): 
+   `pip install googletrans==3.1.0a0`
+   + vlc: pip install 
+   `python-vlc`
+   + pafy: 
+   `pip install pafy`
+   + youtube-search (Youtube Seach): 
+   `pip install youtube-search`
 2. Run script\
    In command-line or terminal, type in: python PyAd.py
 
