@@ -11,16 +11,17 @@ Pyad is a kind of intelligent assistant.
    `pip install wxPython`
    + gTTS (Google Text-to-Speech):\
    `pip install gTTS`
-   + googletrans (implements Google Translate API):\
+   + googletrans (Google Translate):\
    `pip install googletrans==3.1.0a0`
-   + vlc:\
+   + vlc (VLC bindings for Python):\
    `pip install python-vlc`
-   + pafy:\ 
+   + pafy (Python library to download Youtube content and retrieve metadata):\
    `pip install pafy`
    + youtube-search (Youtube Seach):\
    `pip install youtube-search`
 2. Run script\
-   In command-line or terminal, type in: python PyAd.py
+   In command-line or terminal, navigate to the directory that contains the script and run the following command:\
+   `python PyAd.py`
 
 ## Feature
 1. Get information about whatever you want to know about.\
