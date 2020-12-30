@@ -15,7 +15,13 @@ import datetime
 from youtube_search import YoutubeSearch
 import sys
 
-class SecondFrame(wx.Frame):
+class OutputFrame(wx.Frame):
+    def __init__(self, answer):
+        wx.Frame.__init__(self, None, title='Answer')
+        panel = wx.Panel(self)
+        lbl = wx.StaticText(panel, label=answer)
+
+class HelpFrame(wx.Frame):
     def __init__(self):
         wx.Frame.__init__(self, None, title='Help')
         panel = wx.Panel(self)
@@ -96,7 +102,11 @@ class MyFrame(wx.Frame):
         self.Show()
 
     def HelpButton (self, event):
-        frame = SecondFrame();
+        frame = HelpFrame();
+        frame.Show()
+
+    def GetAnswer(self, answer):
+        frame = OutputFrame(answer)
         frame.Show()
 
     #   Get user's input and return info
@@ -149,10 +159,11 @@ class MyFrame(wx.Frame):
                 weather_description = z[0]["description"]
 
                 answer = str(city_name) + "\nTemperature (in Celcius) = " + str(current_temperature) + "\nAtmospheric pressure (in hPa unit) = " + str(current_pressure) + "\nHumidity (in percentage) = " + str(current_humidiy) + "\nDescription = " + str(weather_description)
-                print(answer)
+                # print(answer)
+                self.GetAnswer(answer)
 
             else:
-                print(" City Not Found ")
+                self.GetAnswer(" City Not Found ")
 
             return None
 
@@ -181,7 +192,8 @@ class MyFrame(wx.Frame):
             for translation in translations:
                 origin += translation.origin + ' '
                 answer += translation.text + ' '
-            print(origin, ' -> ', answer)
+            res = origin + ' -> ' + answer
+            self.GetAnswer(res)
 
             return None
 
@@ -193,12 +205,11 @@ class MyFrame(wx.Frame):
 
                 res = client.query(input_)
                 answer = next(res.results).text
-                print(type(res.results[0]))
-                print(answer)
+                self.GetAnswer(answer)
 
             except:
                 # wikipedia
-                print(wikipedia.summary(input_))
+                self.GetAnswer(wikipedia.summary(input_))
 
     def OnEnterVoice(self, event):
         input_ = self.txt.GetValue()
@@ -234,13 +245,13 @@ class MyFrame(wx.Frame):
                 weather_description = z[0]["description"]
 
                 answer = str(city_name) + "\nTemperature (in Celcius) = " + str(current_temperature) + "\nAtmospheric pressure (in hPa unit) = " + str(current_pressure) + "\nHumidity (in percentage) = " + str(current_humidiy) + "\nDescription = " + str(weather_description)
-                print(answer)
+                self.GetAnswer(answer)
                 gtts_obj = gTTS(answer, lang='en')
                 gtts_obj.save('gtts_obj.mp3')
                 os.system('gtts_obj.mp3')
 
             else:
-                print(" City Not Found ")
+                self.GetAnswer(" City Not Found ")
                 gtts_obj = gTTS("City Not Found", lang='en')
                 gtts_obj.save('gtts_obj.mp3')
                 os.system('gtts_obj.mp3')
@@ -269,7 +280,8 @@ class MyFrame(wx.Frame):
             for translation in translations:
                 origin += translation.origin + ' '
                 answer += translation.text + ' '
-            print(origin, ' -> ', answer)
+            res = origin + ' -> ' + answer
+            self.GetAnswer(res)
 
             gtts_obj = gTTS(answer, lang=translate_lang)
             gtts_obj.save('gtts_obj.mp3')
@@ -284,7 +296,7 @@ class MyFrame(wx.Frame):
                 client = wolframalpha.Client(app_id)
                 res = client.query(input_)
                 answer = next(res.results).text
-                print(answer)
+                self.GetAnswer(answer)
 
                 # Play sound that reads the answer
                 gtts_obj = gTTS(answer, lang='en')
@@ -293,7 +305,7 @@ class MyFrame(wx.Frame):
                 # os.remove('gtts_obj.mp3')
             except:
                 # wikipedia
-                print(wikipedia.summary(input_))
+                self.GetAnswer(wikipedia.summary(input_))
 
                 # Play sound that reads the answer
                 gtts_obj = gTTS(wikipedia.summary(input_, sentences=3), lang='en')
