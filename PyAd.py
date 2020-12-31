@@ -6,7 +6,6 @@ import os
 import random
 import requests
 import json
-# import pyglet
 from googletrans import Translator
 import vlc
 import pafy
@@ -20,6 +19,8 @@ class OutputFrame(wx.Frame):
         wx.Frame.__init__(self, None, title='Answer')
         panel = wx.Panel(self)
         lbl = wx.StaticText(panel, label=answer)
+        self.SetBackgroundColour(wx.Colour(13, 17, 23))
+        lbl.SetForegroundColour(wx.Colour(200, 207, 214))
 
 class HelpFrame(wx.Frame):
     def __init__(self):
@@ -30,6 +31,8 @@ class HelpFrame(wx.Frame):
         lbl_string += 'Type "translate <text> <destination language code>" to translate.\n\tEx: translate Hello vi\n'
         lbl_string += 'Type a math expression to get a solution.'
         lbl = wx.StaticText(panel, label=lbl_string)
+        self.SetBackgroundColour(wx.Colour(13, 17, 23))
+        lbl.SetForegroundColour(wx.Colour(200, 207, 214))
 
 class MyFrame(wx.Frame):
     def __init__(self):
@@ -43,11 +46,12 @@ class MyFrame(wx.Frame):
         my_sizer = wx.BoxSizer(wx.VERTICAL)
 
         lbl_string = 'Hi, Im PyAd. Ask me something?\n'
-        lbl_string += 'Type "weather <city name>" to get info about weather.\n'
-        lbl_string += 'Type "youtube <search keywords>" to play Youtube videos.\n'
-        lbl_string += 'Type "translate <text> <destination language code>" to translate.\n\tEx: translate Hello vi\n'
-        lbl_string += 'Type a math expression to get a solution.'
+        # lbl_string += 'Type "weather <city name>" to get info about weather.\n'
+        # lbl_string += 'Type "youtube <search keywords>" to play Youtube videos.\n'
+        # lbl_string += 'Type "translate <text> <destination language code>" to translate.\n\tEx: translate Hello vi\n'
+        # lbl_string += 'Type a math expression to get a solution.'
         lbl = wx.StaticText(panel, label=lbl_string)
+        lbl.SetForegroundColour(wx.Colour(200, 207, 214))
         my_sizer.Add(lbl, 0, wx.ALL, 5)
 
         # Menu bar
@@ -92,12 +96,9 @@ class MyFrame(wx.Frame):
         my_sizer.Add(calendar_button, 0, wx.ALL | wx.CENTER, 5)
 
 #         Set background color
-        self.SetBackgroundColour('gray')
+        self.SetBackgroundColour(wx.Colour(13, 17, 23))
         # self.SetBackgroundColour('CADET BLUE')
         panel.SetSizer(my_sizer)
-
-#         log = wx.TextCtrl(panel, wx.ID_ANY, size=(300,100), style=style);
-#         sys.stdout = log;
 
         self.Show()
 
