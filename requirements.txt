@@ -1,0 +1,8 @@
+googletrans==3.1.0a0
+gTTS==2.2.1
+pafy==0.5.5
+python-vlc==3.0.11115
+youtube-search==1.1.1
+wikipedia==1.4.0
+wolframalpha==4.1.1
+wxPython==4.1.0
