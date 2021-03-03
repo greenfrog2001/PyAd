@@ -8,7 +8,7 @@ Pyad is a kind of intelligent assistant.
 
 2. Run script\
    In command-line or terminal, navigate to the directory that contains the script and run the following command:\
-   `python main.py`
+   `python PyAd.py`
 
 ## Feature
 1. Get information about whatever you want to know about.\
